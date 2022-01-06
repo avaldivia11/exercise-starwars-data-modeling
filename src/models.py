@@ -18,24 +18,30 @@ class User(Base):
     password = Column(String(200))
     state = Column(String(200))
     favorites = relationship("Favoritos")
+    user_id_roles= relationship('UsersRoles')
+    users_groups= relationship("UsersGroup")
+
+
   
 
 class UsersGroup(Base):
     __tablename__ = 'users_group'
-    user_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer,ForeignKey('users.id'), primary_key=True)
     user_username = Column(String(200))
     user_state = Column(String(200))
 
 class UsersRoles(Base):
     __tablename__ = 'users_roles'
-    roles_id = Column(Integer, primary_key=True)
-    user_id = Column(Integer,primary_key=True )
+    roles_id = Column(Integer, ForeignKey('roles.id'), primary_key=True, )
+    user_id = Column(Integer,ForeignKey('users.id'), primary_key=True )
    
 
 class Roles(Base):
     __tablename__ = 'roles'
     id = Column(Integer, primary_key=True)
     rol = Column(String(200))
+    roles_id_user= relationship("UsersRoles")
+
 
 class Favoritos(Base):
     __tablename__ = 'favoritos'
@@ -43,8 +49,8 @@ class Favoritos(Base):
     # Notice that each column is also a normal Python instance attribute.
     users_id = Column(Integer, ForeignKey('users.id'))
     planets_id = Column(Integer, unique=True)
-    characters_id = Column(Integer, unique=True)
-    planet_name = Column(String, primary_key=True)
+    characters_id = Column(Integer, ForeignKey('characters.id'), unique=True)
+    planet_name = Column(String, ForeignKey('planets.id'), primary_key=True)
     character_name = Column(String(200), primary_key=True)
 
 class Planets(Base):
@@ -53,6 +59,7 @@ class Planets(Base):
     name = Column(String(200))
     description = Column(Text(1000))
     state = (String(200))
+    planets_favorite= relationship('Favoritos')
 
 class Characters(Base):
     __tablename__ = 'characters' 
@@ -62,6 +69,7 @@ class Characters(Base):
     rol = Column (String(200))
     descrption = (Text(1000))
     state = (String(200))
+    characters_favorite= relationship('Favoritos')
 
 
 
